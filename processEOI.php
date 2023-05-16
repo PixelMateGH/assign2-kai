@@ -81,7 +81,7 @@
             header("Location: apply.php?error=inv-phone-num");
             exit();
         }
-        #if "other skill" check box is checked and the textbox is empty
+        #if "other skill" check box is checked and the textbox is empty//
         if (EmptySkillbox($skills,$skillbox) !== false){
             header("Location: apply.php?error=inv-skillbox");
             exit();

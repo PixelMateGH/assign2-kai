@@ -61,7 +61,7 @@
                 return false;
             }
         }
-        #This function check for the address-2 length
+        #This function check for the address-2 length //
         function InvalidAddress2($adtwo){
             if(strlen($adtwo) > 40){
                 return true;

@@ -423,7 +423,7 @@
                 }
                 else if(isset($_GET["error"]) == "inv-skillbox"){
                   echo "<p class='error-message'>You must specify the other skills you have</p>";
-                }
+                } #
             ?>   
           </div>
           <h3>Why do you want to work with LESTER TOUCHES TECH?</h3>
