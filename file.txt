@@ -1,6 +1,116 @@
-<?php
-        #This function sanatizes data, leaving no blank space or trailing spaces
-        function DataSanatiser($data){ 
+if (isset($_GET["error"])){
+                  if ($_GET["error"] == ""){
+                  echo "<p class='error-message'></p>";
+                  }
+                  else if(($_GET["error"]) == "emptyinput"){
+                    echo "<p class='error-message'>You must choose at least one skill</p>";
+                  }
+                  else if(($_GET["error"]) == "inv-firstname"){
+                    echo "<p class='error-message'></p>";
+                  }
+                  else if(($_GET["error"]) == "inv-lastname"){
+                    echo "<p class='error-message'></p>";
+                  }
+                  else if(($_GET["error"]) == "inv-dob"){
+                    echo "<p class='error-message'></p>";
+                  }
+                  else if(($_GET["error"]) == "inv-email"){
+                    echo "<p class='error-message'></p>";
+                  }
+                  else if(($_GET["error"]) == "inv-phone-num"){
+                    echo "<p class='error-message'></p>";
+                  }
+                  else if(($_GET["error"]) == "inv-address-2"){
+                    echo "<p class='error-message'></p>";
+                  }
+                  else if(($_GET["error"]) == "inv-suburb"){
+                    echo "<p class='error-message' style='padding-right: 45%;'></p>";
+                  }
+                  else if(($_GET["error"]) == "inv-states"){
+                    echo "<p class='error-message' style='padding-right: 45%;'></p>";
+                  }
+                }
+
+                /*#if users did not enter any data
+            if (EmptyData($JobType, $firstname, $lastname, $dob, $email, $gender, $phonenumber, 
+            $adone, $suburb, $states, $postcode, $skills) !== false){ 
+                $errMsg_jobtype = "<p class='error-message'>You have to choose a job</p>";
+                $errMsg_firstname = "<p class='error-message'>You must enter your first name</p>";
+            }
+            #if firstname is not maximum 20 alpha character
+            if (InvalidFirstName($firstname) !== false){
+                header("Location: apply.php?error=inv-firstname");
+                exit();
+            }
+            #if lastname is not maximum 20 alpha character
+            elseif (InvalidLastName($lastname) !== false){
+                header("Location: apply.php?error=inv-lastname");
+                exit();
+            }
+            #if date of birth is not valid 
+            if (InvalidDob($dob) !== false){
+                header("Location: apply.php?error=inv-dob");
+                exit();
+            }
+            #if address 1 is bigger than 40 characters
+            if (InvalidAddress1($adone) !== false){
+                header("Location: apply.php?error=inv-address-1");
+                exit();
+            }
+            #if address 2 is bigger than 40 characters
+            if (InvalidAddress2($adtwo) !== false){
+                header("Location: apply.php?error=inv-address-2");
+                exit();
+            }
+            #if suburb is bigger than 40 characters
+            if (InvalidSuburb($suburb)!== false) {
+                header("Location: apply.php?error=inv-suburb");
+                exit();
+            }
+            #if states is not chosen correctly
+            if (InvalidState($states) !== false){
+                header("Location: apply.php?error=inv-states");
+                exit();
+            }
+            #if postcode is not typed correctly
+            if (InvalidPostCode($postcode) !== false){
+                header("Location: apply.php?error=inv-states");
+                exit();
+            }
+            #if email is invalid
+            if (InvalidEmail($email) !== false){
+                header("Location: apply.php?error=inv-email");
+                exit();
+            }
+            #if phone number is invalid
+            if (InvalidPhone($phonenumber) !== false){
+                header("Location: apply.php?error=inv-phone-num");
+                exit();
+            }
+            #if "other skill" check box is checked and the textbox is empty//
+            if (EmptySkillbox($skills,$skillbox) !== false){
+                header("Location: apply.php?error=inv-skillbox");
+                exit();
+            }*/
+
+
+            $JobType = DataSanatiser($_POST["JobType"]);
+            $firstname = DataSanatiser($_POST["firstname"]);
+            $lastname = DataSanatiser($_POST["lastname"]);
+            $dob = DataSanatiser($_POST["dob"]);
+            $email = DataSanatiser($_POST["email"]);
+            $gender = DataSanatiser($_POST["gender"]);
+            $phonenumber = DataSanatiser($_POST["phonenumber"]);
+            $adone = DataSanatiser($_POST["adone"]);
+            $adtwo = DataSanatiser($_POST["adtwo"]);
+            $suburb = DataSanatiser($_POST["suburb"]);
+            $states = DataSanatiser($_POST["states"]);
+            $postcode = DataSanatiser($_POST["postcode"]);
+            $skills = DataSanatiser($_POST["skills"]);
+            $skillbox = DataSanatiser($_POST["skillbox"]);
+            $reason = DataSanatiser($_POST["reason"]);
+
+            function DataSanatiser($data){ 
             $data = trim($data);
             $data = stripslashes($data);
             $data = htmlspecialchars($data);
@@ -218,9 +328,9 @@
             return $errorMsg_Skills;
         }
 
-        function OtherSkillsErrors($skills_array, $skillbox){
+        function OtherSkillsErrors($skills, $skillbox){
             $errorMsg_OtherSkills = "";
-            if ((strpos($skills_array,'Otherskills')!==false) && $skillbox ==""){
+            if ($skills == "6" && empty($skillbox)){
                 $errorMsg_OtherSkills = "<p class='error-message'>You must specify your other skills!</p>";
             }
             else {
@@ -228,4 +338,22 @@
             }
             return $errorMsg_OtherSkills;
         }
-?>
+
+        CREATE TABLE `EOI` (
+  `EOInumber` int(11) AUTO_INCREMENT PRIMARY KEY,
+  `JobRefNum` varchar(5) NOT NULL,
+  `firstname` varchar(20) NOT NULL,
+  `lastname` varchar(20) NOT NULL,
+  `dob` varchar(10) NOT NULL,
+  `gender` char(18) NOT NULL,
+  `streetaddress` char(40) NOT NULL,
+  `suburb` char(40) NOT NULL,
+  `state` varchar(3) NOT NULL,
+  `postcode` int(11) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `phonenumber` bigint(12) UNSIGNED NOT NULL,
+  `reason` varchar(200) NOT NULL,
+  `Skills` varchar(200) DEFAULT NULL,
+  `otherskills` varchar(200) NOT NULL,
+  Status ENUM('New', 'Current', 'Final') DEFAULT 'New'
+);

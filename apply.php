@@ -1,3 +1,6 @@
+<?php
+  session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,122 +17,105 @@
   <body class="apply">
     <!----------------------------------Code for navigation bar-------------------------->
 <section class="form-whole">
-    <form action="processEOI.php" method="post">
-    
+    <form action="processEOI.php" method="post" novalidate="novalidate">
       <?php
         include "header.inc";
       ?>
-
             <!-----------------------------------Code for Identity-------------------------------------->
             <br><br><br>
-          <div class="Input">
-            <input type="radio" id="NetAdmin" name="JobType">
-            <label for="NetAdmin">Network System Administrator (#52348)</label>
-            <input type="radio" id="WebDev" name="JobType">
-            <label for="WebDev"> Wev developer (#53549)</label>
-            <?php
-              if (isset($_GET["error"]) == ""){
-                echo "<p class='error-message'></p>";
+          <?php 
+            if (isset($_GET["signup"])){
+              if (($_GET["signup"] == "successful")){
+                echo "<p class='success-message'>Your application has been successfully sent!</p><br>";
               }
-              else if(isset($_GET["error"]) == "emptyinput"){
-                echo "<p class='error-message'>You have to choose a job</p>";
+            }
+          ?>
+          <div class="Input">
+            <input type="radio" id="NetAdmin" name="JobType" value="52348">
+            <label for="NetAdmin">Network System Administrator (#52348)</label>
+            <input type="radio" id="WebDev" name="JobType" value="53549">
+            <label for="WebDev"> Web developer (#53549)</label>
+            <!--------Errors check----------->
+            <?php
+              if (isset($_GET["signup"]) && isset($_SESSION["JobTypeError"])){
+                if (($_GET["signup"] == "errors") && !empty($_SESSION["JobTypeError"])){
+                  echo $_SESSION["JobTypeError"];
+                }
+                else {
+                  echo "<p class='error-message'></p>";
+                }
               }
             ?>
           </div> 
           <br><br>
           <div class="Input">
             <input id="firstname" type="text" placeholder="Enter your first name"name="firstname" >
+            <!--------Errors check----------->
             <?php
-              if (isset($_GET["error"]) == ""){
-                echo "<p class='error-message'></p>";
-              }
-              else if(isset($_GET["error"]) == "emptyinput"){
-                echo "<p class='error-message'>You must enter your first name</p>";
-              }
-              else if(isset($_GET["error"]) == "inv-firstname"){
-                echo "<p class='error-message'>Your first name is invalid</p>";
+              if (isset($_GET["signup"]) && isset($_SESSION["FirstNameError"])){
+                if (($_GET["signup"] == "errors") && !empty($_SESSION["FirstNameError"])){
+                  echo $_SESSION["FirstNameError"];
+                }
+                else {
+                  echo "<p class='error-message'>&nbsp;</p>";
+                }
               }
             ?>
           </div> 
+
           <div class="Input">
             <input id="lastname" type="text" placeholder="Enter your last name" name="lastname">
+            <!--------Errors check----------->
             <?php
-              if (isset($_GET["error"]) == ""){
-                echo "<p class='error-message'></p>";
-              }
-              else if(isset($_GET["error"]) == "emptyinput"){
-                echo "<p class='error-message'>You must enter your last name</p>";
-              }
-              else if(isset($_GET["error"]) == "inv-firstname"){
-                echo "<p class='error-message'></p>";
-              }
-              else if(isset($_GET["error"]) == "inv-lastname"){
-                echo "<p class='error-message'>Your last name is invalid</p>";
+              if (isset($_GET["signup"]) && isset($_SESSION["LastNameError"])){
+                if (($_GET["signup"] == "errors")  && !empty($_SESSION["LastNameError"])){
+                  echo $_SESSION["LastNameError"];
+                }
+                else {
+                  echo "<p class='error-message'>&nbsp;</p>";
+                }
               }
             ?>
-          </div> 
+          </div>
+
           <br><br>
           <div class="Input">
             <input id="dob" type="text" placeholder="dd/mm/yyyy" maxlength="10" name="dob">
+            <!--------Errors check----------->
             <?php
-              if (isset($_GET["error"]) == ""){
-                echo "<p class='error-message'></p>";
-              }
-              else if(isset($_GET["error"]) == "emptyinput"){
-                echo "<p class='error-message'>You must enter your date of birth</p>";
-              }
-              else if(isset($_GET["error"]) == "inv-firstname"){
-                echo "<p class='error-message'></p>";
-              }
-              else if(isset($_GET["error"]) == "inv-lastname"){
-                echo "<p class='error-message'></p>";
-              }
-              else if(isset($_GET["error"]) == "inv-dob"){
-                echo "<p class='error-message'>Invalid date or age must between 15-80</p>";
+              if (isset($_GET["signup"]) && isset($_SESSION["DobError"])){
+                if (($_GET["signup"] == "errors")  && !empty($_SESSION["DobError"])){
+                  echo $_SESSION["DobError"];
+                }
+                else {
+                  echo "<p class='error-message'>&nbsp;</p>";
+                }
               }
             ?>
           </div> 
           <div class="Input">
             <input id="middlename" type="text" placeholder="Enter middlename here">
+            <!--------Whenever dob gets an error, middle name has a line for asthetic reasons----------->
             <?php
-              if (isset($_GET["error"]) == ""){
-                echo "<p class='error-message'></p>";
-              }
-              else if(isset($_GET["error"]) == "emptyinput"){
-                echo "<p class='error-message'>You must enter your middle name</p>";
-              }
-              else if(isset($_GET["error"]) == "inv-firstname"){
-                echo "<p class='error-message'></p>";
-              }
-              else if(isset($_GET["error"]) == "inv-lastname"){
-                echo "<p class='error-message'></p>";
-              }
-              else if(isset($_GET["error"]) == "inv-dob"){
-                echo "<p class='error-message'>Invalid date or age must between 15-80</p>";
+              if (isset($_GET["signup"]) && isset($_SESSION["DobError"])){
+                if (($_GET["signup"] == "errors") || !empty($_SESSION["DobError"])){
+                  echo "<p class='error-message'>&nbsp;</p>";
+                }
               }
             ?>
           </div> 
           <p></p>
           <div class="Input">
             <input id="email" type="text" placeholder="Enter email here" name="email" >
+            <!--------Errors check----------->
             <?php
-              if (isset($_GET["error"]) == ""){
-                echo "<p class='error-message'></p>";
-              }
-              else if(isset($_GET["error"]) == "emptyinput"){
-                echo "<p class='error-message'>You must enter your email address</p>";
-              }
-              else if(isset($_GET["error"]) == "inv-firstname"){
-                echo "<p class='error-message'></p>";
-              }
-              else if(isset($_GET["error"]) == "inv-lastname"){
-                echo "<p class='error-message'></p>";
-              }
-              else if(isset($_GET["error"]) == "inv-dob"){
-                echo "<p class='error-message'></p>";
-              }
-              else if(isset($_GET["error"]) == "inv-email"){
-                echo "<p class='error-message'>Invalid email address</p>";
+              if (isset($_GET["signup"]) && isset($_SESSION["EmailError"])){
+                if (($_GET["signup"] == "errors")  && !empty($_SESSION["EmailError"])){
+                  echo $_SESSION["EmailError"];
+                }
+                else {
+                  echo "<p class='error-message'>&nbsp;</p>";
+                }
               }
             ?>
           </div>
@@ -137,60 +123,39 @@
           <div class="gender">
             <fieldset>
               <legend>Choose Your Gender</legend>
-                <input type="radio" id="male" name="gender">
+                <input type="radio" id="male" name="gender" value="male">
                 <label for="male">Male</label><br>
-                <input type="radio" id="female" name="gender">
+                <input type="radio" id="female" name="gender" value="female">
                 <label for="female">Female</label><br>
-                <input type="radio" id="other" name="gender">
+                <input type="radio" id="other" name="gender" value="other">
                 <label for="other">Other</label><br>
-                <input type="radio" id="notsay" name="gender">
+                <input type="radio" id="notsay" name="gender" value="notsay">
                 <label for="notsay">Prefer not to say</label><br>
+                <!--------Errors check----------->
                 <?php
-                  if (isset($_GET["error"]) == ""){
-                    echo "<p class='error-message'></p>";
-                  }
-                  else if(isset($_GET["error"]) == "emptyinput"){
-                    echo "<p class='error-message'>You must choose an option</p>";
-                  }
-                  else if(isset($_GET["error"]) == "inv-firstname"){
-                    echo "<p class='error-message'></p>";
-                  }
-                  else if(isset($_GET["error"]) == "inv-lastname"){
-                    echo "<p class='error-message'></p>";
-                  }
-                  else if(isset($_GET["error"]) == "inv-dob"){
-                    echo "<p class='error-message'></p>";
-                  }
-                  else if(isset($_GET["error"]) == "inv-email"){
-                    echo "<p class='error-message'></p>";
+                  if (isset($_GET["signup"]) && isset($_SESSION["GenderError"])){
+                    if (($_GET["signup"] == "errors")  && !empty($_SESSION["GenderError"])){
+                      echo $_SESSION["GenderError"];
+                    }
+                    else {
+                      echo "<p class='error-message'></p>";
+                    }
                   }
                 ?>
             </fieldset>
           </div>
           <p></p> 
           <div class="Input">
-            <input class="phonenumber" type="text" placeholder="Enter Phone number here" maxlength="12">
+            <input class="phonenumber" type="text" name="phonenumber" placeholder="Enter Phone number here" maxlength="12">
+            <!--------Errors check----------->
             <?php
-                if (isset($_GET["error"]) == ""){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "emptyinput"){
-                  echo "<p class='error-message'>You must enter your phone number</p>";
-                }
-                else if(isset($_GET["error"]) == "inv-firstname"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-lastname"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-dob"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-email"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-phone-num"){
-                  echo "<p class='error-message'>Phone number must be 8-12 digits</p>";
+                if (isset($_GET["signup"]) && isset($_SESSION["PhoneError"])){
+                  if (($_GET["signup"] == "errors")  && !empty($_SESSION["PhoneError"])){
+                    echo $_SESSION["PhoneError"];
+                  }
+                  else {
+                    echo "<p class='error-message'></p>";
+                  }
                 }
             ?>
           </div> 
@@ -201,93 +166,51 @@
                   <option value="blank">Select country</option>
                   <option value="AUS">Australia</option>
               </select>
+              <!--------Errors check----------->
               <?php
-                if (isset($_GET["error"]) == ""){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "emptyinput"){
-                  echo "<p class='error-message'>You must choose an option</p>";
-                }
-                else if(isset($_GET["error"]) == "inv-firstname"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-lastname"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-dob"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-email"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-phone-num"){
-                  echo "<p class='error-message'></p>";
+                if (isset($_GET["signup"]) && isset($_SESSION["CountryError"])){
+                  if (($_GET["signup"] == "errors")  && !empty($_SESSION["CountryError"])){
+                    echo $_SESSION["CountryError"];
+                  }
+                  else {
+                    echo "<p class='error-message'></p>";
+                  }
                 }
               ?>
           </div>
           <p></p>
           <div class="Input">
-            <input class="adone" type="text" placeholder="Address line 1" maxlength="40" > 
+            <input class="adone" type="text" placeholder="Address line 1" name="adone" maxlength="40"> 
+            <!--------Errors check----------->
             <?php
-                if (isset($_GET["error"]) == ""){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "emptyinput"){
-                  echo "<p class='error-message'>You must enter the address</p>";
-                }
-                else if(isset($_GET["error"]) == "inv-firstname"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-lastname"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-dob"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-email"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-phone-num"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-address-1"){
-                  echo "<p class='error-message'>Invalid Address</p>";
+                if (isset($_GET["signup"]) && isset($_SESSION["Add-1Error"])){
+                  if (($_GET["signup"] == "errors")  && !empty($_SESSION["Add-1Error"])){
+                    echo $_SESSION["Add-1Error"];
+                  }
+                  else {
+                    echo "";
+                  }
                 }
             ?>
           </div>
           <p></p>
           <div class="Input">
-            <input class="adtwo" type="text" placeholder="Address line 2" maxlength="40" >
+            <input class="adtwo" type="text" placeholder="Address line 2" name="adtwo" maxlength="40">
+            <!--------Errors check----------->
             <?php
-                if (isset($_GET["error"]) == ""){
-                  echo "<p class='error-message'></p>";
+              if (isset($_GET["signup"]) && isset($_SESSION["Add-2Error"])){
+                if (($_GET["signup"] == "errors")  && !empty($_SESSION["Add-2Error"])){
+                  echo $_SESSION["Add-2Error"];
                 }
-                else if(isset($_GET["error"]) == "emptyinput"){
-                  echo "<p class='error-message'></p>";
+                else {
+                  echo "";
                 }
-                else if(isset($_GET["error"]) == "inv-firstname"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-lastname"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-dob"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-email"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-phone-num"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-address-2"){
-                  echo "<p class='error-message'>Invalid Address</p>";
-                }
+              }
             ?>
           </div>
           <p></p>
         <div class="state">
-            <input class="suburb" type="text" placeholder="Enter Suburb"  maxlength="40">
+            <input class="suburb" type="text" placeholder="Enter Suburb" name="suburb">
           <select id="states" name="states" class="states">
               <option value="blank">Select a state</option>
               <option value="ACT">Australian Capital Territory</option>
@@ -300,130 +223,82 @@
               <option value="WA">Western Australia</option>
           </select>
           <p></p>
-          <input class="postcode" type="text" placeholder="Postcode" maxlength="4"  pattern="\d{4}">
+          <input class="postcode" type="text" placeholder="Postcode" maxlength="4" name="postcode">
           <p></p>
+          <!--------Errors check----------->
           <?php
-                if (isset($_GET["error"]) == ""){
-                  echo "<p class='error-message'></p>";
+                if (isset($_GET["signup"]) && isset($_SESSION["SuburbError"])){
+                  if (($_GET["signup"] == "errors")  && !empty($_SESSION["SuburbError"])){
+                    echo $_SESSION["SuburbError"];
+                  }
+                  else {
+                    echo "";
+                  }
                 }
-                else if(isset($_GET["error"]) == "emptyinput"){
-                  echo "<p class='error-message' style='padding-right: 45%;'>Enter a suburb, Select a state and enter postcode</p>";
+
+                if (isset($_GET["signup"]) && isset($_SESSION["StateError"])){
+                  if (($_GET["signup"] == "errors")  && !empty($_SESSION["StateError"])){
+                    echo $_SESSION["StateError"];
+                  }
+                  else {
+                    echo "";
+                  }
                 }
-                else if(isset($_GET["error"]) == "inv-firstname"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-lastname"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-dob"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-email"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-phone-num"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-address-2"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-suburb"){
-                  echo "<p class='error-message' style='padding-right: 45%;'>You can only enter upto 40 characters</p>";
-                }
-                else if(isset($_GET["error"]) == "inv-states"){
-                  echo "<p class='error-message' style='padding-right: 45%;'>You must select a state</p>";
+
+                if (isset($_GET["signup"]) && isset($_SESSION["PostcodeError"])){
+                  if (($_GET["signup"] == "errors")  && !empty($_SESSION["PostcodeError"])){
+                    echo $_SESSION["PostcodeError"];
+                  }
+                  else {
+                    echo "";
+                  }
                 }
             ?>
         </div>
           <!---------------------------------Code for skills---------------------------------->
           <h2 class="otherskill">Skills</h2>
           <div class="Input">
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="check1" type="checkbox" name="skills" value="1">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="check1" type="checkbox" name="skills[]" value="C++, CSS, HTML">
               <label for="check1">C++, CSS, HTML</label>
-              &nbsp;<input id="check2" type="checkbox" name="skills" value="2">
+              &nbsp;<input id="check2" type="checkbox" name="skills[]" value="Microsoft Office">
               <label for="check2">Microsoft Office</label>
             
             <br><br>
-              &nbsp;<input id="check3" type="checkbox" name="skills" value="3">
+              &nbsp;<input id="check3" type="checkbox" name="skills[]" value="MySQL">
               <label for="check3">MySQL</label>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="check4" type="checkbox" name="skills" value="4">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="check4" type="checkbox" name="skills[]" value="PHP">
               <label for="check4">PHP</label>
             <br><br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="check5" type="checkbox" name="skills" value="5">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="check5" type="checkbox" name="skills[]" value="Java, JavaScript">
               <label for="check5">Java, JavaScript</label>&nbsp;
-              <input id="otherCheck" type="checkbox" name="skills" value="6">
+              <input id="otherCheck" type="checkbox" name="skills[]" value="Otherskills">
               <label for="otherCheck" id="checkbox">Other Skills</label>
             <br>
+            <!--------Errors check----------->
             <?php
-                if (isset($_GET["error"]) == ""){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "emptyinput"){
-                  echo "<p class='error-message'>You must choose at least one skill</p>";
-                }
-                else if(isset($_GET["error"]) == "inv-firstname"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-lastname"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-dob"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-email"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-phone-num"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-address-2"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-suburb"){
-                  echo "<p class='error-message' style='padding-right: 45%;'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-states"){
-                  echo "<p class='error-message' style='padding-right: 45%;'></p>";
+                if (isset($_GET["signup"]) && isset($_SESSION["SkillsError"])){
+                  if (($_GET["signup"] == "errors")  && !empty($_SESSION["SkillsError"])){
+                    echo $_SESSION["SkillsError"];
+                  }
+                  else {
+                    echo "";
+                  }
                 }
             ?>
           </div>
           <h3 id="otherbox">Other Skills</h3>
           <div class="Input">
             <textarea id="skillbox" placeholder="Enter Other skills" maxlength="200" rows="8" cols="30" name="skillbox"></textarea>
+            <!--------Errors check----------->
             <?php
-                if (isset($_GET["error"]) == ""){
-                  echo "<p class='error-message'></p>";
+                if (isset($_GET["signup"]) && isset($_SESSION["OtherSkillError"])){
+                  if (($_GET["signup"] == "errors")  && !empty($_SESSION["OtherSkillError"])){
+                    echo $_SESSION["OtherSkillError"];
+                  }
+                  else {
+                    echo "";
+                  }
                 }
-                else if(isset($_GET["error"]) == "emptyinput"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-firstname"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-lastname"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-dob"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-email"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-phone-num"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-address-2"){
-                  echo "<p class='error-message'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-suburb"){
-                  echo "<p class='error-message' style='padding-right: 45%;'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-states"){
-                  echo "<p class='error-message' style='padding-right: 45%;'></p>";
-                }
-                else if(isset($_GET["error"]) == "inv-skillbox"){
-                  echo "<p class='error-message'>You must specify the other skills you have</p>";
-                } #
             ?>   
           </div>
           <h3>Why do you want to work with LESTER TOUCHES TECH?</h3>

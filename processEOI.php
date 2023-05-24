@@ -1,112 +1,86 @@
 <?php 
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+
+    session_start();
     require_once "settings.php";
     require_once "functions.inc.php";
     
     if (isset($_POST["submit"])){ #Check if the users have actually submitted the form, i.e: pressing the submit button once
+            $JobType = DataSanatiser($_POST["JobType"]);
+            $firstname = DataSanatiser($_POST["firstname"]);
+            $lastname = DataSanatiser($_POST["lastname"]);
+            $dob = DataSanatiser($_POST["dob"]);
+            $email = DataSanatiser($_POST["email"]);
+            $gender = DataSanatiser($_POST["gender"]);
+            $phonenumber = DataSanatiser($_POST["phonenumber"]);
+            $country = DataSanatiser($_POST["country"]);
+            $adone = DataSanatiser($_POST["adone"]);
+            $adtwo = DataSanatiser($_POST["adtwo"]);
+            $suburb = DataSanatiser($_POST["suburb"]);
+            $states = DataSanatiser($_POST["states"]);
+            $postcode = DataSanatiser($_POST["postcode"]);
+            $skills = $_POST["skills"];
+            $skills_array= "";
+                foreach($skills as $items){
+                    $skills_array .= $items.";";
+                }
+            $skillbox = DataSanatiser($_POST["skillbox"]);
+            $reason = DataSanatiser($_POST["reason"]);
 
-        $dbconn = mysqli_connect($host, $user, $pwd, $sql_db);
-        if (!$dbconn) {
-            die("Database connection failure");
-        }
+            $_SESSION["JobTypeError"] = JobTypeErrors($JobType);
+            $_SESSION["FirstNameError"] = FirstNameErrors($firstname);
+            $_SESSION["LastNameError"] = LastNameErrors($lastname);
+            $_SESSION["DobError"] = DoBErrors($dob);
+            $_SESSION["EmailError"] = EmailErrors($email);
+            $_SESSION["GenderError"] = GendersErrors($gender);
+            $_SESSION["PhoneError"] = PhoneErrors($phonenumber);
+            $_SESSION["CountryError"] = CountryErrors($country);
+            $_SESSION["Add-1Error"] = Address1Errors($adone);
+            $_SESSION["Add-2Error"] = Address2Errors($adtwo);
+            $_SESSION["SuburbError"] = SuburbErrors($suburb);
+            $_SESSION["StateError"] = StateErrors($states);
+            $_SESSION["PostcodeError"] = PostcodeErrors($postcode,$states);
+            $_SESSION["SkillsError"] = SkillsErrors($skills);
+            $_SESSION["OtherSkillError"] = OtherSkillsErrors($skills_array, $skillbox);
 
-        $JobType = DataSanatiser($_POST["JobType"]);
-        $firstname = DataSanatiser($_POST["firstname"]);
-        $lastname = DataSanatiser($_POST["lastname"]);
-        $dob = DataSanatiser($_POST["dob"]);
-        $email = DataSanatiser($_POST["email"]);
-        $gender = DataSanatiser($_POST["gender"]);
-        $phonenumber = DataSanatiser($_POST["phonenumber"]);
-        $adone = DataSanatiser($_POST["adone"]);
-        $adtwo = DataSanatiser($_POST["adtwo"]);
-        $suburb = DataSanatiser($_POST["suburb"]);
-        $states = DataSanatiser($_POST["states"]);
-        $postcode = DataSanatiser($_POST["postcode"]);
-        $skills = DataSanatiser($_POST["skills"]);
-        $skillbox = DataSanatiser($_POST["skillbox"]);
-        $reason = DataSanatiser($_POST["reason"]);
 
-        #if users did not enter any data
-        if (EmptyData($JobType, $firstname, $lastname, $dob, $email, $gender, $phonenumber, 
-        $adone, $suburb, $states, $postcode, $skills) !== false){ 
-            header("Location:apply.php?error=emptyinput"); #return the users back to the application page with an error message on link
-            exit();
-        }
-        #if firstname is not maximum 20 alpha character
-        if (InvalidFirstName($firstname) !== false){
-            header("Location: apply.php?error=inv-firstname");
-            exit();
-        }
-        #if lastname is not maximum 20 alpha character
-        if (InvalidLastName($lastname) !== false){
-            header("Location: apply.php?error=inv-lastname");
-            exit();
-        }
-        #if date of birth is not valid 
-        if (InvalidDob($dob) !== false){
-            header("Location: apply.php?error=inv-dob");
-            exit();
-        }
-        #if address 1 is bigger than 40 characters
-        if (InvalidAddress1($adone) !== false){
-            header("Location: apply.php?error=inv-address-1");
-            exit();
-        }
-        #if address 2 is bigger than 40 characters
-        if (InvalidAddress2($adtwo) !== false){
-            header("Location: apply.php?error=inv-address-2");
-            exit();
-        }
-        #if suburb is bigger than 40 characters
-        if (InvalidSuburb($suburb)!== false) {
-            header("Location: apply.php?error=inv-suburb");
-            exit();
-        }
-        #if states is not chosen correctly
-        if (InvalidState($states) !== false){
-            header("Location: apply.php?error=inv-states");
-            exit();
-        }
-        #if postcode is not typed correctly
-        if (InvalidPostCode($postcode) !== false){
-            header("Location: apply.php?error=inv-states");
-            exit();
-        }
-        #if email is invalid
-        if (InvalidEmail($email) !== false){
-            header("Location: apply.php?error=inv-email");
-            exit();
-        }
-        #if phone number is invalid
-        if (InvalidPhone($phonenumber) !== false){
-            header("Location: apply.php?error=inv-phone-num");
-            exit();
-        }
-        #if "other skill" check box is checked and the textbox is empty//
-        if (EmptySkillbox($skills,$skillbox) !== false){
-            header("Location: apply.php?error=inv-skillbox");
-            exit();
-        }
+            if ($_SESSION["JobTypeError"] !== "" || $_SESSION["FirstNameError"] !== "" || $_SESSION["LastNameError"] !== "" ||
+            $_SESSION["DobError"] !== "" || $_SESSION["EmailError"] !== "" || $_SESSION["GenderError"] !== "" || $_SESSION["PhoneError"] !== "" ||
+            $_SESSION["CountryError"] !== "" || $_SESSION["Add-1Error"] !== "" || $_SESSION["SuburbError"] !== "" || 
+            $_SESSION["StateError"] !== "" || $_SESSION["SkillsError"] !== "" || $_SESSION["OtherSkillError"] !== ""){
+                header("Location: apply.php?signup=errors");
+                exit();
+            }
+            else{
+                
+                $conn = mysqli_connect($host,$user,$pwd,$sql_db);
+                //make the array of skills to get multiple skills check box
+                
 
-        
-        $sql_table = 'EOI';
+                //Check the connection to the database
+                if (!$conn){
+                    echo "<p>Can't connect to the database</p>";
+                }
+                else{
+                    //Adding the EOI into the table on the database
+                    $query = "INSERT into EOI (JobRefNum,firstname, lastname,dob,gender,streetaddress,suburb,state,postcode,email,phonenumber,reason,Skills,otherskills) 
+                    values           ('$JobType','$firstname','$lastname','$dob','$gender','$adone','$suburb','$states','$postcode','$email','$phonenumber','$reason','$skills_array','$skillbox')";          
+                    $run = mysqli_query($conn,$query);
 
-        $query = "INSERT INTO $sql_table (JobRefNum, firstname, lastname, dob, gender, streetaddress, suburb, state, postcode, email, phonenumber, reason, MySQL, MSoffice, CSS, PHP, JAVA, otherskills) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = mysqli_prepare($dbconn, $query);
-
-        mysqli_stmt_bind_param($stmt, 'sssssssssssssssssss', $JobType, $firstname, $lastname, $dob, $gender, $adone, $suburb, $states, $postcode, $email, $phonenumber, $reason, $skills, $skills, $skills, $skills, $skills, $skillbox);
-
-        if (mysqli_stmt_execute($stmt)) {
-            echo "Expression of Interest submitted successfully!";
-        } else {
-            echo "Error: " . mysqli_error($dbconn);
-        }
-        mysqli_close($dbconn);
-        
+                    //Check if the query ran succesfully
+                    if (!$run){
+                        echo "<p>Unable to create table</p>";
+                    }
+                    else{
+                        session_unset();  
+                        session_destroy();
+                        header("Location: apply.php?signup=successful");
+                    }  
+                    mysqli_close($conn);             
+                }   
+                exit(); 
+            }
     }
-    else{
-        header("Location: apply.php"); #return the users back to the application page
-        exit();
-    }
-
 ?>

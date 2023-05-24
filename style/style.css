@@ -2639,6 +2639,11 @@ img.stocks{
     font-size: 16px;
     margin-bottom: 0px;
 }
+.success-message{
+    display: inline-block;
+    color: rgb(23, 166, 10);
+    font-size: 18px;
+}
 h3 {
     text-align: center;
 }
